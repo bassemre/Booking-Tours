@@ -1,0 +1,21 @@
+header.header  
+    nav.nav.nav--tours
+        //-'/' ro go to the main page for all tours main (route)
+        a.nav__el(href='/') All Tours
+    .header__logo
+        img(src='/img/logo-white.png' alt='Natours logo')  
+        
+    nav.nav.nav--user
+        if user 
+            //-from isloggedin middleware (res.locals.user)
+            a.nav__el.nav__el--logout log out
+            //-/me to go to account page  
+            a.nav__el(href='/me')
+                img.nav__user-img(src=`/img/users/${user.photo}`,alt=`photo of ${user.name}`)
+                span=user.name.split(' ')[0]
+        else
+            //-if not user
+            //-to go to the login page from any page extends from base.pug like(overview,tour) pages
+            a.nav__el(href='/login') log in 
+            //-to go to the signup page
+            a.nav__el.nav__el--cta(href='#') sign up

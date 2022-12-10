@@ -1,0 +1,32 @@
+//-<h1>the park camper</h1> by pug we write it h1 the park camper(simple syntax)
+
+doctype html
+html
+  head
+    block head
+      meta(charset='UTF-8')
+      meta(name='viewport' content='width=device-width, initial-scale=1.0 ')
+      link(rel='stylesheet' href='/css/style.css')
+      link(rel='shortcut icon' type='image/png' href='/img/favicon.png') 
+      //-we are autom make middleware to serve static files in public app.use(express.static(path.join(__dirname, 'public')))
+      link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato:300,300i,700') 
+      //-google font link
+      title Natours | #{title} 
+
+  body   
+    //-HEADERS
+    include _headers
+    //-Content
+    block content
+      h1 this is the place holder heading
+    //-Footer
+    include _footers
+    //-script(src='http://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js')
+    //-script(src='/js/mapbox.js')
+    //-LOGIN SCRIPTS
+    //-script(src='/js/login-with-axios.js')
+    script(src='/js/login-with-fetch.js')
+    //-script(src='/js/bundle.js')
+    //-UPDATEING YSER DATA SCRIPT
+    script(src='/js/updateUserSetting.js')
+    script(src='/js/stripe.js')
