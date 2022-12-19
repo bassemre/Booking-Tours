@@ -30,8 +30,6 @@ userRouter.patch('/resetPassword/:token', authController.resetPassword); //patch
 
 //protect all routes after this middleware
 //----------------------ADD middleware for protect all routes instead of put authcontroller.protect in all of them------------
-//userRouter is small app so we can add middleware like app.use
-//middleware run in sequence so will be applied for all routes in the bottom(IMP) of userRouter
 userRouter.use(authController.protect);
 //----------------------ADD middleware for protect all routes instead of put authcontroller.protect in all of them------------
 
@@ -67,4 +65,3 @@ userRouter.route('/').get(getAllUsers).post(createNewUser);
 userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
 
 module.exports = userRouter;
-//to export one thing

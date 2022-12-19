@@ -4,10 +4,6 @@ const authController = require('../controllers/authController');
 const bookingController = require('../controllers/bookingController');
 
 viewRouter = express.Router();
-//---middleware for renderd pages(we need this middleware to applied to every single route here)
-//-viewRouter.use(authController.isLoggedIn);
-//-removed that because we add protect middleware to some routes and isloogedIn will dublicate the code in protect middleware so we will specify it to the routes
-//---middleware for renderd pages(we need this middleware to applied to every single route here)
 
 viewRouter.route('/').get(
   bookingController.createBookingCheckout, //we add createBookingCheckout because this route will be hit if  create checkout session is successfully
