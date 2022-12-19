@@ -8,19 +8,7 @@ const factory = require('./handlerFactory');
 //-----------Multer middleware configure-----------------
 
 //1)-----------MULTER Storage property-------------
-/*const multerStorage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, 'public/img/users'); //'public/img/users'--> the destination file that we upload photo file into
-  },
-  filename: (req, file, callback) => {
-    //file name format ---> user-userid-timestamp.jpeg(extension)
-    //-----------from req.file-------------------(check that by console.log(req.file))
-    const ext = file.mimetype.split('/')[1]; //extention like (jpg,jpeg.etc,.......)
-    callback(null, `user-${req.user.id}-${Date.now()}.${ext}`); //file name format ---> user-userid-timestamp.jpeg(extension)
-  },
-});*/
-//IMP we removed the const multerStorage above because when we make image processing after uploading file by sharp
-//the best way to dont save the file into the disk 'public/img/users' but instead resizing at Memory instead of disk and then save to the disk
+
 const multerStorage = multer.memoryStorage();
 //-----------MULTER Storage property-------------
 
@@ -39,16 +27,12 @@ const multerFilter = (req, file, callback) => {
 //-----------MULTER Filter property-------------
 
 //3)-------fill multer middleware by options from 1,2
-//------------to Upload users photos to this folder by multer -----------------------
-//body parser middleware dont be able to upload files(handle files) to req.body
-//so we use Multer package to parse file into request object(req.file)
+
 const upload = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
 });
 
-//'public/img/users'--> the destination file that we upload photo file into
-//upload is multer middleware function to upload photo and 'photo' is the name of the field in DB so must call single()
 const uploadUserPhoto = upload.single('photo');
 //-----------Multer middleware configure-----------------
 
@@ -58,8 +42,7 @@ const resizeUserPhoto = catchAsync(async (req, res, next) => {
   //at this point we have req.file(photo uploaded)
   if (!req.file) return next();
 
-  //at this point we dont have req.file.filename because we use--->multer.memoryStorage() and not define file name
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`; //because we define the format at sharp to be jpeg
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
   await sharp(req.file.buffer)
     .resize(500, 500)
@@ -85,8 +68,7 @@ const filterObj = (obj, ...allowedFields) => {
 //1)ROUTES HANDLER (USER HANDLER BY USER him self)(based on the current user(logged in ))
 
 //A)--GET USER SPECIFIED DATA (/me)
-//from get one we pass req.params.id but we dont need to pass id in params we need the id for the current user (user logged in )
-//so we add middleware to get current user id from (protect middleware) and then go to factory.getOne(User)
+
 const getMe = (req, res, next) => {
   req.params.id = req.user.id;
   next();
@@ -119,10 +101,8 @@ const updateMYData = catchAsync(async (req, res, next) => {
   //3)if not , Update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filterBody, {
     new: true,
-    runValidators: true, //we want mongo to validate our document
-  }); //req.user from log in middleware
-  //WE DONT USE user.save() because we dont to run validator like in (passwordConfirm) (not sensitive data)
-  //(IMP)we put filterBody because we dont update every thing in the req.body for example if user set(role:"admin ") that can access every thing like admin
+    runValidators: true,
+  });
 
   res.status(200).json({
     status: 'sucess',

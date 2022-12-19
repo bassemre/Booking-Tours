@@ -55,7 +55,6 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
 //create new booking on checkout success
 exports.createBookingCheckout = catchAsync(async (req, res, next) => {
-  //THIS is temporary , because it unsecure every one can make booking without paying
   //1)get data from success url (query string)
   const { tour, user, price } = req.query;
   if (!tour && !user && !price) {
@@ -67,8 +66,7 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
     user: user,
     price: price,
   });
-  res.redirect(req.originalUrl.split('?')[0]); //for more secure we are remove query string from url by make new request to the main route
-  //then go to this handler again with not req.query then next to isloggedIn then getoverview
+  res.redirect(req.originalUrl.split('?')[0]);
 });
 //-------------------creating booking by checkout sessions by client---------------
 
@@ -87,4 +85,3 @@ exports.updateBooking = factory.updateOne(Booking);
 
 //delete Booking
 exports.deleteBooking = factory.deleteOne(Booking);
-//--------------------using factory handler--------------------

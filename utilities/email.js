@@ -33,40 +33,10 @@ const sendEmail = async (options) => {
 
 //2)--------SENDING EMAIL WITH SENDGRID---------
 
-const sgMail = require('@sendgrid/mail'); // to send email from node js
-pug = require('pug'); //to send html via email(options)
-/*const sendEmail = async (options) => {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-  //2)define the email options
-  const mailOptions = {
-    from: process.env.MY_SECRET_EMAIL, //from Sendgrid
-    to: process.env.MY_SECRET_EMAIL, //(for test)
-    subject: options.subject,
-    text: options.message,
-    //html
-  };
-  sgMail
-    .send(mailOptions)
-    .then(() => {
-      console.log('Email sent');
-    })
-    .catch((error) => {
-      console.error(error);
-    }); //return promise
-};*/
+const sgMail = require('@sendgrid/mail');
 
 //--------SENDING EMAIL WITH SENDGRID---------
 
-//-------------------------Create Email class from which we can create Email objects------------------------
-//-------------------------we put sendGrid inside that class---------------------------------
-
-//Classes are a template for creating objects.
-//They encapsulate data with code to work on that data.
-//The body of a class is the part that is in curly brackets {}. This is where you define class members, such as methods or constructor.
-//this refere to the object(out from class)
-//we access constructor by passing arguments to new object out from class
-//we access and call  method by ---> new Email(arguments).nameofmethod()
 module.exports = class Email {
   constructor(user, url) {
     //this refer to the new object out of Class Email
@@ -84,21 +54,6 @@ module.exports = class Email {
   //class methods
   //send the actual Email
   async send(template, subject) {
-    //1)Render HTML Based on a pug template
-    /*
- pug.renderFile(path, ?options, ?callback) 
-path: string
-The path to the Pug file to render
-options: ?options
-An options object, also used as the locals object
-callback: ?function
-Node.js-style callback receiving the rendered results. This callback is called synchronously.
-returns: string
-The resulting HTML string
-var pug = require('pug');
-var html = pug.renderFile('path/to/file.pug', options);
-*/
-
     console.log(this.to);
     const html = pug.renderFile(
       `${__dirname}/../views/emails/${template}.pug`,

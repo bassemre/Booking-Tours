@@ -1,27 +1,19 @@
-//--2)we can add here (Express Global error handling middleware) handler(controller)
 const AppError = require('./../utilities/appError');
 
 const handleCastErrorDB = (err) => {
   const message = `invalid ${err.path}:${err.value}.`;
-  return new AppError(message, 400); //transfer werid error come from mongo to nice error to client(operational error)
+  return new AppError(message, 400);
 };
 
 const handleDuplicateFieldsDB = (err) => {
-  const value = err.errmsg.match(/([" '])(\\?.)*?\1/)[0]; // match return array and [0] to select first element ;
+  const value = err.errmsg.match(/([" '])(\\?.)*?\1/)[0];
   //console.log(value)
   const message = `Duplicate Field Value :${value} please use another value!`;
   return new AppError(message, 400);
-  //error coming from mongodb driver(validation)
-  //we want to extract the(value)name of duplicate field (from postman we will see in "errmsg"(field):**************name of dublicate field);
-  //to extract the value we use regular expression ([" '])(\\?.)*?\1
 };
 
 const handleValidationErrorDB = (err) => {
   const errors = Object.values(err.errors).map((el) => el.message);
-  //Object.values used to make loop over an object
-  //error.errors from mongodb in postman
-  //we need to extract message from every (object values) in err.errors
-  //message is object in err.errors.value
   const message = `invalid input data.${errors.join('. ')} `;
   return new AppError(message, 400);
 };
@@ -42,9 +34,6 @@ module.exports = (err, req, res, next) => {
 
   //1)---------------development-------------------
   if (process.env.NODE_ENV === 'development') {
-    //to get all informations about errors at development environment (as developer)
-    //original url for URL WITHOUT local host
-    //A)API
     if (req.originalUrl.startsWith('/api')) {
       res.status(err.statusCode).json({
         status: err.status,
@@ -67,8 +56,7 @@ module.exports = (err, req, res, next) => {
     //A)OPERATIONAL ERRORS
     //------------MARK error come from mongodb as operational error--------------
 
-    let error = err; //let because we will reassign the value of error
-    //error come from mongodb to global handling error middleware
+    let error = err;
     console.log(error.name);
     if (error.name === 'CastError') {
       error = handleCastErrorDB(error);

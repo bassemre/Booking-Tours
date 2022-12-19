@@ -2,11 +2,6 @@ const catchAsync = require('../utilities/catchAsync');
 const AppError = require('./../utilities/appError');
 const APIFeatures = require('./../utilities/apiFeatures');
 //----------------------Factory functions---------------------
-//all of create handlers or updatae handlers or delete handlers in all controllers(tour,user,review,...) really all just look basically the same
-//dublicate code
-//imagine we wanted to change some(htpp status code or status message )we will have to go into each controller and change all the handlers
-//so why not simply create (FACTORY functions) that gonna return these handlers for us
-//factory function (function return another function(our handler function) )
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -26,8 +21,6 @@ exports.deleteOne = (Model) =>
 
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    //find by id and update in one line
-    //1st arg (to find) 2nd arg( to update) 3rd arg (some options)
     const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true, // to return object after update was applied(if we dont set new:true by default findByIdAndUpdate return the original )
       runValidators: true, //if true runs update validators to validate the update operation against the model schema
@@ -76,21 +69,14 @@ exports.getOne = (Model, popOptions) =>
 
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    //--BUILD QUERY(query strin in url ?field1=value1&field2=value2 to be in mongoose method {field1:value1(typed), field2:value2(typed) }
-    //--EXCUTE QUERY
     const features = new APIFeatures(Model.find(), req.query)
       .filter()
       .sort()
       .limitingFields()
       .paginate();
-    //i have access to the class
-    //now we need to pass query and querystring parameters
-    //.filter().sort().....(to get access to filter&sort methods in the class)
-    //const docs = await features.query.explain(); //explain to add som stats to the query
+
     const docs = await features.query;
-    //--imp (check the diff between queryObj and req.query)
-    //(query) still changed after all process of filtering query.sort().select().skip().limit()
-    //and final answers awaited to be excuted in tours
+
     //--SEND RESPONSE
     res.status(200).json({
       status: 'success',

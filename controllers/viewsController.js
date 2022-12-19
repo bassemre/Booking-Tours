@@ -63,5 +63,5 @@ exports.getMyBookedTours = catchAsync(async (req, res, next) => {
   res.status(200).render('overview', {
     title: 'My Booked Tours',
     tours: tours,
-  }); //we dont need to create new template we will use overview page but with only booked tours
+  });
 });

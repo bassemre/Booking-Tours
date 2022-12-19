@@ -19,11 +19,6 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
 });
 
 exports.getReview = factory.getOne(Review);
-
-//we can set create Review by factory function(factory.createOne(Review)) but we add another function to set additional data for
-/* if (!req.body.tour) req.body.tour = req.params.tourId;
-  if (!req.body.user) req.body.user = req.user.id;*/
-//but i will keep it by its handler (dont use factory function)
 exports.createReview = catchAsync(async (req, res, next) => {
   //-----from nested routes in tour routes-----------------
   if (!req.body.tour) req.body.tour = req.params.tourId;

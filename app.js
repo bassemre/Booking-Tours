@@ -18,13 +18,12 @@ const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRouter');
 const bookingRouter = require('./routes/bookingRoutes');
 
-const app = express(); //(to call express function)
+const app = express();
 
 //------set template engine---------
 app.engine('pug', require('pug').__express);
 app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'views')); //folder name (views)
-//by path.join function we dont even need to think about any './' or not to find the files
+app.set('views', path.join(__dirname, 'views'));
 //------set template engine---------
 
 //1)Global MIDDLEWAREs
@@ -32,8 +31,7 @@ app.set('views', path.join(__dirname, 'views')); //folder name (views)
 app.use(cors());
 app.options('*', cors());
 //---A)Serving static files
-app.use(express.static(path.join(__dirname, 'public'))); //built in middleware to serving static files(http://localhost:3000/overview.html)
-//see base.pug file
+app.use(express.static(path.join(__dirname, 'public')));
 
 //---B)set SECURITY HTTP HEADERS
 app.use(helmet()); //put in the first of all middlewares func
@@ -42,8 +40,7 @@ app.use(helmet()); //put in the first of all middlewares func
 console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
-} //development environment (Only run this middleware in dev environment not production environment)
-
+}
 //---D)limit requests from same API
 //----Global middleware for implement rate limiting--------
 //rateLimit take some options
@@ -57,12 +54,7 @@ app.use('/api', limiter);
 //----Global middleware for implement rate limiting--------
 
 //---E)Body parser , reading data from the body ,req.body
-app.use(express.json()); //this middleware is middle of (req and res )
-//to modify the incoming request data
-//to add the data by json format in the req.body(if we didnt put this middle ware json format dont be allowed)
-//steps that request goes through while is being processed
-//this middlware applying for all url routes
-//if we add middleware after route handler the cycle will be complete without called middllware (order is imp to addmiddleware before route handler )
+app.use(express.json());
 
 app.use(cookieparser()); //parses the data from cookies to get cookie includes(jwt) from browser wen send request to api
 
@@ -93,29 +85,19 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  //add property in request obj called requestTime
-  //to know the time of request
   req.requestTime = new Date().toISOString();
   console.log(req.cookies);
   next();
 });
-
-//2)ROUTES HANDLER
-//moved to separeated folder (controller)
-
-//3)ROUTES
-//moved to separeated folder (routes)
 
 //--------Routes to access tempalate-----------
 app.use('/', viewRouter);
 //--------Routes to access tempalate-----------
 
 //this middleware applied for specific url
-app.use('/api/v1/tours', tourRouter); //this middleware to connect tourRouter to application(without this middleware router will be not defined)
-//when send req to '/api/v1/tours' the req goes into the middleware stack then tourRouter mid.ware function will call(run)
-//this called mounting the router(mounting new router(tourRouter) on a route(/api/v1/tours'))
+app.use('/api/v1/tours', tourRouter);
 
-app.use('/api/v1/users', userRouter); //this middleware to connect tourRouter to application(because we remove app.route)
+app.use('/api/v1/users', userRouter);
 
 app.use('/api/v1/reviews', reviewRouter);
 
@@ -123,41 +105,17 @@ app.use('/api/v1/booking', bookingRouter);
 
 //---ERROR HANDLING BY EXPRESS
 
-//--1)Error handling for unhandled routes
-//must add after all handled route middleware (if we add before them this middleware will be excuted whatever the router endpoint)
-//all for all HTTP verbs
-//('*') for all url routes that not handled
 app.all('*', (req, res, next) => {
-  //------Create an error (from Error constructor)
-
-  //removed after add (AppError)r class
-  //const err = new Error(`cant find the ${req.originalUrl} on this server`);
-  //err.status = 'fail';
-  //err.statusCode = 404;
-
   const err = new AppError(
     `cant find the ${req.originalUrl} on this server`,
     404
   );
-  next(err); //to go to Express Global error handling middleware with err object
-  //if we didnt add err to next() by default middleware will got to global error handling middleware by error object
+  next(err);
 });
 
 //--2)Express Global error handling middleware
-//by give middleware function 4 arguments , (Express will automatically recognizing it as error handling middleware)
 app.use(globalErrorHandler);
 
-//4)START SERVER(moved to server.js file)
-
-/*const port = 3000;
-app.listen(port, () => {
-  console.log(`App running on port ${port}`);
-});*/
-
-//to start a server //port is event (return to observer pattern)
-// if any request sent just the handler with this request will be executed and not other top level code
-//if any changes in files (server will be restart)(and all top level codes will be executed)
-
-module.exports = app; //when run server.js the require function will read and run  app.js file
+module.exports = app;
 
 console.log('start app.js');
