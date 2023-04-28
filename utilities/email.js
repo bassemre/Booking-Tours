@@ -42,11 +42,10 @@ module.exports = class Email {
     //this refer to the new object out of Class Email
 
     //SEND in DEV mood to test
-    if (process.env.NODE_ENV === 'development') {
+    /* if (process.env.NODE_ENV === 'development') {
       this.to = ' bassem@mailsac.com'; //fake email for test from mailsac website in dev mode
-    } else {
-      this.to = user.email;
-    }
+    } else {*/
+    this.to = user.email;
     this.from = `BassemRefaat <${process.env.MY_SECRET_EMAIL}>`; //from Sendgrid;
     this.firstName = user.name.split(' ')[0];
     this.url = url;
