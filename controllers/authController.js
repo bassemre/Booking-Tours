@@ -42,8 +42,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   //----send cookie-----------
 
   //sending welcome email----
-  const url = `${req.protocol}://${req.get('host')}/me`; //to go to account page to upload user photo
-  console.log(url);
+  const url = `${req.protocol}://${req.get('host')}/login`; //to go to account page to upload user photo(chang it for test to login page dirctly)
   await new Email(newUser, url).sendWelcome();
 
   //send response

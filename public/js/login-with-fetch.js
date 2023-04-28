@@ -74,22 +74,71 @@ const logout = async () => {
 //DOM ELEMENTS
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
+//DOM ELEMENTS
+const signupForm = document.querySelector('.form--signup');
+//add event
+//specify id elements(#email)(#password)
+
+//--------------signup FUNCTIONALLITY----------------------
+
+const signUp = async (name, email, password, confirmPassword) => {
+  const data = {
+    name,
+    email,
+    password,
+    passwordConfirm: confirmPassword,
+  };
+  try {
+    //fetch return a promise
+    const res = await fetch('/api/v1/users/signup', {
+      method: 'POST',
+      body: JSON.stringify(data), //because the value in the body most be in json format (app.use(express.json())only parse json format)
+      headers: data ? { 'Content-Type': 'application/json' } : {},
+    });
+    //to reload to main page
+    if (res.status === 201) {
+      showAlert('success', 'please check your email!');
+    } else {
+      showAlert('error', ' incorrect email or password');
+    }
+  } catch (err) {
+    console.log(err);
+    showAlert('error', err.data);
+  }
+};
+
+//--------------signup FUNCTIONALLITY----------------------
 
 //add event
 //specify id elements(#email)(#password)
-if (loginForm)
+if (signupForm) {
+  signupForm.addEventListener('submit', (e) => {
+    //e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('passwordConfirm').value;
+
+    signUp(name, email, password, confirmPassword);
+  });
+} else if (loginForm) {
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     login(email, password);
   });
-//.form--login the class in login.pug
-//submit -->event that the browser will fire off whenever the user clicks on the submit button on the form
-
-if (logOutBtn)
+} else if (logOutBtn) {
   //add event
   //specify id elements(#email)(#password)
   logOutBtn.addEventListener('click', logout);
+}
 //.nav__el--logout the class in login.pug
+//submit -->event that the browser will fire off whenever the user clicks on the submit button on the form
+
+//.form--login the class in login.pug
+//submit -->event that the browser will fire off whenever the user clicks on the submit button on the form
+
+//.form--login the class in login.pug
 //submit -->event that the browser will fire off whenever the user clicks on the submit button on the form

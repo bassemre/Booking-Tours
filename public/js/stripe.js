@@ -1,6 +1,6 @@
 //---------------alert-----------------
 //we move it from alert.js because we have proplem in browser about dont define require or import (we need to solve it !!!!!!!!!!)
-const hideAlert = () => {
+/*const hideAlert = () => {
   const el = document.querySelector('.alert');
   if (el) el.parentElement.removeChild(el);
 };
@@ -11,7 +11,7 @@ const showAlert = (type, msg) => {
   const markup = `<div class="alert alert--${type}">${msg}</div>`;
   document.querySelector('body').insertAdjacentHTML('afterbegin', markup);
   window.setTimeout(hideAlert, 5000);
-};
+};*/
 //---------------alert-----------------
 
 //-----------------------checkout-session-----------------

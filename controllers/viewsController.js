@@ -65,3 +65,11 @@ exports.getMyBookedTours = catchAsync(async (req, res, next) => {
     tours: tours,
   });
 });
+
+//--6)signup page
+exports.getSignUpForm = catchAsync(async (req, res, next) => {
+  res.status(200).render('signup', {
+    title: 'signup to get account',
+    //user,
+  });
+});

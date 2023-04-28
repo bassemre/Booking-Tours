@@ -1,5 +1,5 @@
 const { convert } = require('html-to-text');
-
+const pug = require('pug');
 //1)--------SENDING EMAIL WITH NODEMAILER---------
 const nodemailer = require('nodemailer');
 //const pug = require('nodemailer');
@@ -87,7 +87,7 @@ module.exports = class Email {
   }
 
   async sendWelcome() {
-    await this.send('Welcome', 'Welcome to the Natours site!');
+    await this.send('welcome', 'Welcome to the Natours site!');
   }
   async sendPasswordReset() {
     await this.send(

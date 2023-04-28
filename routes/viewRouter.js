@@ -19,6 +19,8 @@ viewRouter
   .route('/login')
   .get(authController.isLoggedIn, viewsController.getloginForm);
 
+viewRouter.route('/signup').get(viewsController.getSignUpForm);
+
 //-show user Account
 viewRouter.route('/me').get(authController.protect, viewsController.getAccount);
 
